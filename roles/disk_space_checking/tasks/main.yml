@@ -1,13 +1,7 @@
-- name: Check free space on /
-  ansible.builtin.shell: df -k / | awk 'NR==2 {print $4}'
-  register: freespace_raw
-- name: Convert KB to GB
-  ansible.builtin.set_fact:
-    freespace_gb: "{{ (freespace_raw.stdout | int / 1024 / 1024) | round(2) }}"
-- name: Report free disk space
-  ansible.builtin.debug:
-    msg: "Available disk space on /: {{ freespace_gb }} GB"
-- name: Fail if there is not enough space
-  ansible.builtin.fail:
-    msg: "Host localhost does not have enough disk space on /"
-  when: "{{ freespace_gb | float < 20 }}"
+- name: Linux vm disk space checking
+  import_tasks: linux_disk.yml
+  when: linux_disk_space
+
+- name: Windows vm disk space checking
+  import_tasks: win_disk.yml
+  when: win_disk_space

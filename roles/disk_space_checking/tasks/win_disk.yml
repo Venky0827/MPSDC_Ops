@@ -1,0 +1,16 @@
+- name: Gather disk facts
+  win_disk_facts:
+  
+- name: Display disk free space
+  ansible.builtin.set_fact:
+    free_space_gb: "{{ (item.size_available | int / 1024 / 1024 / 1024) | round(2) }}"
+  loop: "{{ ansible_facts['disks'] | dict2items }}"
+
+- name: Report free disk space
+  ansible.builtin.debug:
+    msg: "Available disk space on 'C Drive' : {{ free_space_gb }} GB"
+
+- name: Fail if there is not enough space
+  ansible.builtin.fail:
+    msg: "Host localhost does not have enough disk space on C drive"
+  when: "{{ free_space_gb }} < 20"

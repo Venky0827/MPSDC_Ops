@@ -1,6 +1,7 @@
 - name: register a user
   community.general.redhat_subscription:
     state: present
-    username: "{{ user.name }}"
-    password: "{{ user.password }}"
-    auto_attach: true
+    username: "{{ redhat.username }}"
+    password: "{{ redhat.password }}"
+    auto_attach: true\
+  when: linux_registration

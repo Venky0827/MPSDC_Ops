@@ -1,5 +1,5 @@
 ---
-- name: Actvities on openstack platform
+- name: Adding ips to the host list
   hosts: localhost
   vars_files:
   - "{{ playbook_dir }}/vars/vm_details.yml"
@@ -12,7 +12,7 @@
 
     - debug: var=target_hosts
 
-- name: Actvities on openstack platform
+- name: OS patching and pre checks
   hosts: target_hosts
   gather_facts: false
   vars_files:

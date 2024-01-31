@@ -4,3 +4,7 @@ role:
   - linux_update: false
   - win_update: false
   - win_disk_space: false
+
+redhat:
+  username: "fwieyfgikw"
+  password: "weiugfi"
