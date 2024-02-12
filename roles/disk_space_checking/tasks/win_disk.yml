@@ -19,7 +19,7 @@
 
 - name: assign value to variable
   ansible.builtin.set_fact:
-    free_space_gb: "{{ out.stdout | int / 1024 / 1024 / 1024 | round(2) }}"
+    free_space_gb: "{{ (out.stdout | int / 1024 / 1024 / 1024) | round(2) }}"
 
 - name: Report free disk space
   debug:

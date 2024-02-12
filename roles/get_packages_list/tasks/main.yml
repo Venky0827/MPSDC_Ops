@@ -10,7 +10,7 @@
 
 - name: Gathering packages list information
   import_tasks: win_list.yml
-  when: role.get_win_packages_list 
+  when: role.get_win_packages_list
 
 - name: Saving updateable packages data in PDF formatted file
   import_tasks: win.yml
