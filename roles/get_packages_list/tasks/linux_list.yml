@@ -1,0 +1,4 @@
+- name: Get updateable packages
+  yum:
+    list: updates
+  register: updateable_packages

@@ -1,14 +1,29 @@
-- name: Gather disk facts
-  win_disk_facts:
-  
-- name: Display disk free space
+- name: Check disk space on Windows
+  block:
+    - name: Check disk space on Windows
+      win_shell: Get-Volume | Select-Object -Property DriveLetter, SizeRemaining | ConvertTo-Csv -NoTypeInformation
+      register: windows_disk_space
+    - name: Print disk space on Windows
+      debug:
+        msg: "{{ windows_disk_space.stdout_lines }}"
+    - name: Write disk space to CSV file on Windows
+      local_action:
+        module: copy
+        content: "{{ windows_disk_space.stdout }}"
+        dest: "details.csv"
+
+- name: get value
+  shell: awk -F',' '$1 == "\"C\"" {print $2}' details.csv | cut -d '"' -f 2
+  register: out
+  delegate_to: localhost
+
+- name: assign value to variable
   ansible.builtin.set_fact:
-    free_space_gb: "{{ (item.size_available | int / 1024 / 1024 / 1024) | round(2) }}"
-  loop: "{{ ansible_facts['disks'] | dict2items }}"
+    free_space_gb: "{{ out.stdout | int / 1024 / 1024 / 1024 | round(2) }}"
 
 - name: Report free disk space
-  ansible.builtin.debug:
-    msg: "Available disk space on 'C Drive' : {{ free_space_gb }} GB"
+  debug:
+    msg: "Available disk space on 'C Drive': {{ free_space_gb }}"
 
 - name: Fail if there is not enough space
   ansible.builtin.fail:

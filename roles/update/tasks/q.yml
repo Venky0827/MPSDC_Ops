@@ -1,0 +1,9 @@
+---
+- name: uodating packages
+  ansible.builtin.yum:
+    name: "{{ package.name }}"
+    state: latest
+  loop_control:
+    loop_var: package
+  loop: "{{ packages.list }}"
+  when: "{{ package.status }} == approved "

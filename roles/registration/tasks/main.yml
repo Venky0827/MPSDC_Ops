@@ -3,5 +3,5 @@
     state: present
     username: "{{ redhat.username }}"
     password: "{{ redhat.password }}"
-    auto_attach: true\
-  when: linux_registration
+    auto_attach: true
+  when: linux_registration and {{ ansible_os_family }} == "Redhat"

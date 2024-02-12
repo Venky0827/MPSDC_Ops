@@ -1,0 +1,10 @@
+- name: creating html report file
+  template:
+    src: "linux_rhel.j2"
+    dest: "{{ playbook_dir }}/report.html"
+  delegate_to: localhost
+  connection: local
+- name: converting html to pdf
+  shell: "wkhtmltopdf --page-height 10000mm report.html {{ playbook_dir }}/list/{{ inventory_hostname }}_app.pdf"
+  delegate_to: localhost
+  connection: local
