@@ -1,10 +1,10 @@
 role:
-  linux_disk_space: false
+  linux_disk_space: true
   linux_registration: false
   linux_update: false
   win_update: false
   win_disk_space: false
-  get_linux_packages_list: false
+  get_linux_packages_list: true
   get_win_packages_list: false
 
 

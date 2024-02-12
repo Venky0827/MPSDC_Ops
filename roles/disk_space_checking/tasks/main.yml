@@ -1,7 +1,7 @@
 - name: Linux vm disk space checking
   import_tasks: linux_disk.yml
-  when: role.linux_disk_space and {{ ansible_os_family }} == "Redhat"
+  when: role.linux_disk_space
 
 - name: Windows vm disk space checking
   import_tasks: win_disk.yml
-  when: role.win_disk_space ans {{ ansible_os_family }} == "Windows"
+  when: role.win_disk_space

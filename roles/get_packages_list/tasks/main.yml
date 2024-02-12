@@ -2,16 +2,16 @@
 # tasks file for roles/pdf
 - name: Gathering packages list information
   import_tasks: linux_list.yml
-  when: "role.get_linux_packages_list and {{ ansible_os_family }} == Redhat"
+  when: role.get_linux_packages_list
 
 - name: Saving updateable packages data in PDF formatted file
-  imoprt_tasks: linux.yml
+  import_tasks: linux.yml
   when: role.get_linux_packages_list
 
 - name: Gathering packages list information
   import_tasks: win_list.yml
-  when: role.get_win_packages_list and {{ ansible_os_family }} == "Windows"
+  when: role.get_win_packages_list 
 
 - name: Saving updateable packages data in PDF formatted file
-  imoprt_tasks: win.yml
+  import_tasks: win.yml
   when: role.get_win_packages_list

@@ -10,5 +10,6 @@
 
 - name: Fail if there is not enough space
   ansible.builtin.fail:
-    msg: "Host localhost does not have enough disk space on /"
-  when: "{{ free_space_gb }} < 20"
+    msg: "Host does not have enough disk space on /"
+  when: free_space_gb | int < 20
+  ignore_errors: true

@@ -14,22 +14,30 @@
 
 - name: OS patching and pre checks
   hosts: target_hosts
+  gather_facts: no
+  vars_files:
+  - "{{ playbook_dir }}/vars/var.yml"
+  - "{{ playbook_dir }}/vars/default.yml"
+  serial: 1
+  tasks:
+    - name: Get list update packages
+      ansible.builtin.import_role: 
+        name: get_packages_list
+
+- name: OS patching and pre checks
+  hosts: target_hosts
   gather_facts: true
   vars_files:
   - "{{ playbook_dir }}/vars/var.yml"
   - "{{ playbook_dir }}/vars/default.yml"
   tasks:
-    - name: registration 
-      ansible.builtin.import_role: 
-        name: registration
+    # - name: registration 
+    #   ansible.builtin.import_role: 
+    #     name: registration
 
     - name: Disk space checking 
       ansible.builtin.import_role: 
         name: disk_space_checking
-
-    - name: Get list update packages
-      ansible.builtin.import_role: 
-        name: get_packages_list
 
     - name: patch update
       ansible.builtin.import_role: 
