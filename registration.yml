@@ -1,0 +1,24 @@
+---
+- name: Adding ips to the host list
+  hosts: localhost
+  vars_files:
+  - "{{ playbook_dir }}/vars/vm_details.yml"
+  tasks:
+    - name: Adding hosts to the list
+      ansible.builtin.add_host:
+        name: "{{ item.ip }}"
+        group: target_hosts
+      loop: "{{ vm_details }}"
+
+    - debug: var=target_hosts
+
+- name: OS patching and pre checks
+  hosts: target_hosts
+  gather_facts: true
+  vars_files:
+  - "{{ playbook_dir }}/vars/var.yml"
+  - "{{ playbook_dir }}/vars/default.yml"
+  tasks:
+    - name: registration 
+      ansible.builtin.import_role: 
+        name: registration
