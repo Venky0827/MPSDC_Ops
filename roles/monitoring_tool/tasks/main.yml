@@ -1,0 +1,26 @@
+- name: check status of monitoring tool
+  ansible.builtin.shell: # Need to write code for status tool checking
+  register: tool_status
+
+- name: Display status of monitoring tool
+  ansible.builtin.debug:
+    msg: "Monitoring tool is running"
+  when: tool_status.stdout == "running"
+
+- name: Disable monitoring tool
+  # need to write logic from MIcrofocus team
+  when: tool_status.stdout == "running"
+
+- name: checking status of monitoring tool after disabling
+  ansible.builtin.shell: # Need to write logic from task 1
+  register: tool_status1
+
+- name: Status of monitoring tool
+  ansible.builtin.debug:
+    msg: "Tool is in disabled state"
+  when: tool_status1.stdout == "not running"
+
+- name: Fail if tool is not disabled
+  ansible.builtin.fail:
+    msg: "Monitoring tool still enabled, so task is failing here"
+  when: tool_status1.stdout != "not running"

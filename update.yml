@@ -12,7 +12,7 @@
 
     - debug: var=target_hosts
 
-- name: OS patching and pre checks
+- name: pre checks before patching
   hosts: target_hosts
   gather_facts: true
   vars_files:
@@ -23,6 +23,31 @@
       ansible.builtin.import_role: 
         name: disk_space_checking
 
-    - name: patch update
+    - name: Checking application status
+      ansible.builtin.import_role:
+        name: app_check
+         
+    - name: monitoring tool status Check
+      ansible.builtin.import_role:
+        name: monitoring_tool
+
+- name: Taking backup before OS patching
+  hosts: localhost
+  vars_files:
+  - "{{ playbook_dir }}/vars/var.yml"  
+  tasks:
+    - name: Backing up vms before applying patching
+      ansible.builtin.import_role:
+        name: vm_backup
+        
+- name: Applying patch to the vms
+  hosts: target_hosts
+  vars_files:
+  - "{{ playbook_dir }}/vars/var.yml"
+  - "{{ playbook_dir }}/vars/default.yml"
+  tasks:        
+    - name: patching vms after all pre-checks
       ansible.builtin.import_role: 
         name: update
+
+# Application/DB smoke test nne to write logic
