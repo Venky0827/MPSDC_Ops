@@ -1,0 +1,10 @@
+- name: Display status of role
+  debug:
+    msg: "Started collecting OS volume id of each instance"
+
+- name: creating a file containing list of volumes
+  ansible.builtin.import_tasks: list.yml
+  
+- name: Display status of role
+  debug:
+    msg: "Completed collecting OS volume id of each instance"

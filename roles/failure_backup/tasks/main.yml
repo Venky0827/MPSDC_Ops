@@ -1,0 +1,75 @@
+- name: power off the vms
+  import_tasks: power_off.yml
+
+- name: changing the vms boot disk
+
+
+- name: Get authentication details (modify with your credentials)
+  set_fact:
+    os_auth_url: "https://your_openstack_auth_url"
+    os_username: "your_openstack_username"
+    os_password: "{{ lookup('password_file', '/path/to/your/password') }}"
+    os_project_name: "your_openstack_project"
+
+- name: Choose snapshot to restore from (modify as needed)
+  set_fact:
+    snapshot_name: "{{ snapshot_to_restore }}"
+
+- name: Find existing volume associated with the snapshot
+  openstack.cloud.volume_facts:
+    auth_url: "{{ os_auth_url }}"
+    username: "{{ os_username }}"
+    password: "{{ os_password }}"
+    project_name: "{{ os_project_name }}"
+    filters:
+      name: "{{ snapshot_name }}"
+  register: snapshot_info
+
+- name: Fail if snapshot not found
+  fail:
+    msg: "Snapshot '{{ snapshot_name }}' not found!"
+  when: snapshot_info.results | length == 0
+
+- name: Extract volume ID from snapshot
+  set_fact:
+    volume_id: "{{ snapshot_info.results[0].volume_id }}"
+
+- name: Stop the target instance (modify as needed)
+  openstack.cloud.server_stop:
+    auth_url: "{{ os_auth_url }}"
+    username: "{{ os_username }}"
+    password: "{{ os_password }}"
+    project_name: "{{ os_project_name }}"
+    name: "{{ target_instance }}"
+
+- name: Detach any existing volumes from the instance
+  openstack.cloud.server_volume_detach:
+    auth_url: "{{ os_auth_url }}"
+    username: "{{ os_username }}"
+    password: "{{ os_password }}"
+    project_name: "{{ os_project_name }}"
+    server: "{{ target_instance }}"
+    volume: "{{ item.id }}"
+  loop: "{{ target_instance_volumes }}"
+  vars:
+    target_instance_volumes: "{{ lookup('openstack.cloud.server_volume_facts', server=target_instance) | json_query('[*].id') }}"
+
+- name: Attach the snapshot volume to the instance
+  openstack.cloud.server_volume_attach:
+    auth_url: "{{ os_auth_url }}"
+    username: "{{ os_username }}"
+    password: "{{ os_password }}"
+    project_name: "{{ os_project_name }}"
+    server: "{{ target_instance }}"
+    volume: "{{ volume_id }}"
+
+- name: Boot the restored instance
+  openstack.cloud.server_start:
+    auth_url: "{{ os_auth_url }}"
+    username: "{{ os_username }}"
+    password: "{{ os_password }}"
+    project_name: "{{ os_project_name }}"
+    name: "{{ target_instance }}"
+
+- name: Verify restored instance (modify as needed)
+  # Add tasks to check application functionality and data integrity

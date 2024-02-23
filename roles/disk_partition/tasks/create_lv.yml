@@ -1,0 +1,7 @@
+- name: task for creating logical volume
+  community.general.lvol:
+      vg: "{{ item.vg }}"
+      lv:  "{{ item.lv }}"
+      size: "{{ item.size }}"
+      force: yes
+  loop: "{{ disk_list.inventory_hostname }}"

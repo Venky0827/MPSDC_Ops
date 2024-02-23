@@ -1,0 +1,28 @@
+- name: gather information
+  openstack.cloud.server_info:
+    auth:
+      auth_url: "{{ os_auth_url }}"
+      username: "{{ os_username }}"
+      password: "{{ os_password }}"
+      project_name: "{{ os_project_name }}"
+      user_domain_name: "mpsdc"
+      project_domain_name: "mpsdc"
+    auth_type: password
+    region_name: regionOne
+    validate_certs: false
+    server: "{{ item }}"
+  register: vm_details
+  with_items:
+    - id
+- name: creating variable having list 
+  set_fact:
+    successfull: "{{ successfull + [{'vm_name': item.openstack_servers[0].name, 'vm_id': item.openstack_servers[0].id, 'ip': item.openstack_servers[0].private_v4, 'os_vol_id': item.openstack_servers[0].volumes[0].id}] }}"
+  loop: "{{ vm_details.results }}"
+
+- name: Display stored item and volume IDs
+  debug:
+    var: successfull
+    
+- template:
+    src: server.j2
+    dest: "{{ playbook_dir }}/vars/list.yml"

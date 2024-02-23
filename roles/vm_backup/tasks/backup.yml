@@ -1,4 +1,16 @@
-- name: creating images of vms
-  ansible.builtin.shell: "openstack server image create --name {{ item.name }}-{{ ansible_date_time.iso8601 }} {{ item.name }}"
-  loop: "{{ instance_snapshot }}"
+- name: creating snapshot of volume having OS
+  openstack.cloud.volume_snapshot:
+    auth:
+      auth_url: "{{ os_auth_url }}"
+      username: "{{ os_username }}"
+      password: "{{ os_password }}"
+      project_name: "{{ os_project_name }}"
+      user_domain_name: "mpsdc"
+      project_domain_name: "mpsdc"
+    auth_type: password
+    region_name: regionOne
+    state: present
+    name: " {{ item.os_vol_id }}-OS-snapshot-{{ ansible_date_time.date }}"
+    volume: "{{ item.os_vol_id }}"
+  loop: "{{ vm_list }}"
   ignore_errors: true

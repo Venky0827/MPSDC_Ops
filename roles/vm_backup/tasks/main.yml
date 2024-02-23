@@ -1,2 +1,10 @@
-- name: Taking backup of vms 
+- name: Display status of role
+  debug:
+    msg: "Started creating snapshot of OS volume of each instance"
+
+- name: Taking backup of vms by capturing snapshot of OS volume
   import_tasks: backup.yml
+
+- name: Display status of role
+  debug:
+    msg: "Completed creating snapshot of OS volume of each instance"

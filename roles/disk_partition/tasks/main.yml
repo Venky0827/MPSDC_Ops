@@ -1,0 +1,8 @@
+- name: Creating partitions
+  ansible.builtin.import_tasks: disk_partition.yml
+
+- name: Task for creating volume group
+  ansible.builtin.import_tasks: create_vg.yml
+
+- name: task for creating logical volume
+  ansible.builtin.import_tasks: creata_lv.yml

@@ -1,0 +1,7 @@
+vm_list:
+{% for vm in successfull %}
+  - name: {{ vm.vm_name }}
+    id: {{ vm.vm_id }}
+    ip: {{ vm.ip }}
+    os_vol_id: {{ vm.os_vol_id }}
+{% endfor %}

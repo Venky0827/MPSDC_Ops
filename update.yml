@@ -1,6 +1,7 @@
 ---
 - name: Adding ips to the host list
   hosts: localhost
+  gather_facts: no
   vars_files:
   - "{{ playbook_dir }}/vars/vm_details.yml"
   tasks:
@@ -36,6 +37,10 @@
   vars_files:
   - "{{ playbook_dir }}/vars/var.yml"  
   tasks:
+    - name: Creating vms volume list
+      ansible.builtin.import_role:
+        name: volume_list
+        
     - name: Backing up vms before applying patching
       ansible.builtin.import_role:
         name: vm_backup
@@ -50,4 +55,19 @@
       ansible.builtin.import_role: 
         name: update
 
-# Application/DB smoke test nne to write logic
+# Application/DB smoke test need to write logic
+
+- name: Reverting changes back if app/db not working as expected
+  hosts: localhost
+  tasks:
+    - name: changing vms to old state
+      ansible.builtin.import_role:
+        name: failure_backup
+
+# Questions to be asked
+What is the down time for OS patching
+How much they taken down time
+What is the preferrable method for recovery ( backup/ snapshot)
+Backup require cinder-backup is it available
+How many vms they update simultaneously
+print pdf after update all at a time 

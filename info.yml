@@ -1,0 +1,13 @@
+task_1: Creating network and subnets and ports and able to modify the newtork based on input yml files 
+task_2: Creating Volumes from snanpots, images as well as normal volume based on input yml files and you can also delete volumes 
+task_3: Creating instances from images, volumes with Static IP based on input yml files
+task_4: Deleting volumes, intances and network modification and resizing of vms
+task_5: Creating backup for instance & volume by creating image from server and taking and snapshots of volumes
+task_6: Registration of linux vms with RHEL subscription
+task_7: Generating reports containing information about OS patching updates of each VM before OS patching for approval purpose
+task_8: Disk space checking for both Linux and Windows vms before performing OS patching
+task_9: Performing backup operations before applying patches to the VMs
+task_10: Updating and applying patches to all the VMs based on OS distribution
+task_11: Re-enabling the monitoring tool and check status of monitoring tool
+task_12: After OS patching, performing APP/DB smoke test
+task_13: If Smoke test is not OK, then reverting changes back to the old state

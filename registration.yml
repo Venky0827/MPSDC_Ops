@@ -7,14 +7,24 @@
     - name: Adding hosts to the list
       ansible.builtin.add_host:
         name: "{{ item.ip }}"
-        group: target_hosts
+        group: all_hosts
       loop: "{{ vm_details }}"
-
+      
     - debug: var=target_hosts
 
-- name: OS patching and pre checks
-  hosts: target_hosts
+- name: Separating VMs based on OS distribution
+  hosts: all_hosts
   gather_facts: true
+  tasks:
+    - name: group hosts by distribution
+      group_by:
+        key: "{{ ansible_distribution }}"
+      changed_when: false
+      when: "{{ ansible_distribution }} is RedHat"
+      
+- name: Subscribing RedHat VMs 
+  hosts: RedHat
+  gather_facts: false
   vars_files:
   - "{{ playbook_dir }}/vars/var.yml"
   - "{{ playbook_dir }}/vars/default.yml"
