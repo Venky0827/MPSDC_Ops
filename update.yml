@@ -63,11 +63,3 @@
     - name: changing vms to old state
       ansible.builtin.import_role:
         name: failure_backup
-
-# Questions to be asked
-What is the down time for OS patching
-How much they taken down time
-What is the preferrable method for recovery ( backup/ snapshot)
-Backup require cinder-backup is it available
-How many vms they update simultaneously
-print pdf after update all at a time 

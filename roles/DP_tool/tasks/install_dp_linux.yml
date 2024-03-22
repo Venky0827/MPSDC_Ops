@@ -1,0 +1,15 @@
+- name: Copy Data Protector installation Files
+  ansible.builtin.copy:
+    src: /path/to/dataprotector.tar
+    dest: /tmp/dataprotector.tar
+
+- name: Extract Data Protector tar package
+  ansible.builtin.unarchive:
+    src: /tmp/dataprotector.tar
+    dest: /opt/dataprotector
+    remote_src: yes
+
+- name: Run installation script
+  command: /opt/dataprotector/install.sh --option1=value1 --option2=value2
+  args:
+    creates: /opt/dataprotector/configured_file.txt

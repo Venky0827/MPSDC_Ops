@@ -1,0 +1,7 @@
+- name: Installing Data Protector tool on Linux VMs
+  ansible.builtin.import_tasks: install_dp_linux.yml
+  when: role.install_dp_linux
+
+- name: Installing Data Protector tool on Windows VMs
+  ansible.builtin.import_tasks: install_dp_win.yml
+  when: role.install_dp_win 

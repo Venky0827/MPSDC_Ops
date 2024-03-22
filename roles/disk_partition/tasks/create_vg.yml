@@ -1,0 +1,6 @@
+- name: Task for creating volume group
+  community.general.lvg:
+      vg: "{{ item.vg }}"
+      pvs: "{{ item.pv }}"
+      pesize: "{{ item.size }}"
+  loop: "{{ disk_list.inventory_hostname }}"

@@ -1,0 +1,69 @@
+- name: Creating partitions
+  community.general.parted:
+    device: "{{ item.device }}"
+    fs_type: "{{ item.type | default('xfs') }}"
+    state: present
+    number: 1
+    part_type: "{{ item.size }}"
+  loop: "{{ disk_list.inventory_hostname }}"
+
+
+
+- hosts: localhost
+  gather_facts: no
+  vars:
+    parts:
+      - { num: 1, part_end: 1GiB }
+      - { num: 2, part_start: 1GiB, part_end: 2GiB }
+      - { num: 3, part_start: 2GiB, part_end: 3.5GiB }
+      - { num: 4, part_start: 3.5GiB }
+  tasks:
+    - name: Creating partitions
+      community.general.parted:
+        device: /dev/nvme0n2
+        fs_type: "{{ item.type | default('xfs') }}"
+        state: "{{ item.state | default('present') }}"
+        number: "{{ item.num }}"
+        part_start: "{{ item.part_start }}"
+        part_end: "{{ item.part_end | default('100%') }}"
+      loop: "{{ parts }}"
+      when: "{{ item.num }} == 1"
+      tags:
+        - part
+    - name: Creating partitions
+      community.general.parted:
+        device: /dev/nvme0n2
+        fs_type: "{{ item.type | default('xfs') }}"
+        state: "{{ item.state | default('present') }}"
+        number: "{{ item.num }}"
+        part_start: "{{ item.part_start }}"
+        part_end: "{{ item.part_end | default('100%') }}"
+      loop: "{{ parts }}"
+      when: "{{ item.num }} > 1"
+      tags:
+        - part
+    - name: Task for creating logical volume group
+      community.general.lvg:
+        vg: sample-vg
+        pvs: /dev/nvme0n2p1
+        pesize: 9GB
+      register: out2
+
+    - debug: var=out2
+
+    - name: crating lvm
+      lvol:
+        vg: sample-vg
+        lv: sample-lvm
+        size: 1g
+        force: true
+      register: out3
+
+    - debug: var=out3
+    - shell: lsblk
+      register: list
+      tags:
+        - part
+    - debug: var=list.stdout_lines
+      tags:
+        - part

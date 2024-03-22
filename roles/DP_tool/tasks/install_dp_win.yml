@@ -1,0 +1,22 @@
+- name: Copy Data Protector installation package (zip) to target Windows system
+  win_copy:
+    src: /path/to/dataprotector.zip
+    dest: C:\Temp\dataprotector.zip
+
+- name: Unzip Data Protector installation package
+  win_unzip:
+    src: C:\Temp\dataprotector.zip
+    dest: C:\Temp\dataprotector
+
+- name: Run setup.exe to install Data Protector client
+  win_command: C:\Temp\dataprotector\setup.exe /option1=value1 /option2=value2
+  args:
+    creates: C:\Program Files\Data Protector\installed_marker.txt
+
+- name: Configure Data Protector client for import
+  win_command: omnicc.exe -secure_comm -configure_peer your_cell_manager_hostname
+  args:
+    creates: C:\Program Files\Data Protector\configured_marker.txt
+
+- name: Import Data Protector client to the cell
+  win_command: omnicc.exe -import_host your_client_hostname

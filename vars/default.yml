@@ -6,7 +6,8 @@ role:
   win_disk_space: false
   get_linux_packages_list: true
   get_win_packages_list: false
-
+  install_dp_linux: false
+  install_dp_win: false
 
 redhat:
   username: "fwieyfgikw"
